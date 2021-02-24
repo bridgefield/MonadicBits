@@ -16,7 +16,7 @@ namespace MonadicBits
 
         public static Maybe<T> Just(T instance) => new Maybe<T>(instance, true);
 
-        public static Maybe<T> Nothing() => new Maybe<T>(default, true);
+        public static Maybe<T> Nothing() => new Maybe<T>(default, false);
 
         public Maybe<TResult> Bind<TResult>([NotNull] Func<T, Maybe<TResult>> mapping)
         {
@@ -54,5 +54,8 @@ namespace MonadicBits
                 nothing();
             }
         }
+
+        public Either<TLeft, T> ToEither<TLeft>([NotNull] TLeft left) =>
+            IsJust ? Either<TLeft, T>.Right(Instance) : Either<TLeft, T>.Left(left);
     }
 }
