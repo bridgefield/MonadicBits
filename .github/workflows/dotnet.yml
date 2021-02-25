@@ -25,5 +25,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Pack
       run: dotnet pack --configuration Release
+    - name: Add Nuget source
+      run: nuget sources add -name "github" -Source https://nuget.pkg.github.com/bridgefield/index.json -Username bridgefield -Password ${{ secrets.GITHUB_TOKEN }}
     - name: Push
       run: dotnet nuget push "MonadicBits/bin/Release/bridgefield.MonadicBits.0.1.0-alpha.nupkg" --source "github"
