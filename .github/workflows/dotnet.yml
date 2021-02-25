@@ -1,4 +1,4 @@
-name: .NET
+name: CI
 
 on:
   push:
@@ -26,6 +26,6 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release
     - name: Add Nuget source
-      run: nuget sources add -name "github" -Source https://nuget.pkg.github.com/bridgefield/index.json -Username bridgefield -Password ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget add source https://nuget.pkg.github.com/bridgefield/index.json -n github -u bridgefield -p ${{ secrets.GITHUB_TOKEN }}
     - name: Push
-      run: dotnet nuget push "MonadicBits/bin/Release/bridgefield.MonadicBits.0.1.0-alpha.nupkg" --source "github"
+      run: dotnet nuget push "MonadicBits/bin/Release/bridgefield.MonadicBits.0.1.0-alpha.nupkg" -s github
