@@ -23,3 +23,7 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Pack
+      run: dotnet pack --configuration Release
+    - name: Push
+      run: dotnet nuget push "MonadicBits/bin/Release/bridgefield.MonadicBits.0.1.0-alpha.nupkg" --source "github"
