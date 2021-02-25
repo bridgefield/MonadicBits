@@ -1,0 +1,21 @@
+name: Release to Nuget.org
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Pack
+      run: dotnet pack --configuration Release
+    - name: Add Nuget source
+      run: dotnet nuget add source https://api.nuget.org/v3/index.json -n nugetorg -u bridgefield -p ${{ secrets.NUGET_ORG_API_KEY }} --store-password-in-clear-text
+    - name: Push
+      run: dotnet nuget push **\*.nupkg -s nugetorg --skip-duplicate
