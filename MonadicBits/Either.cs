@@ -9,18 +9,23 @@ namespace MonadicBits
         private TRight RightInstance { get; }
         private bool IsRight { get; }
 
-        private Either(TLeft leftInstance, TRight rightInstance, bool isRight)
+        private Either(TLeft leftInstance)
         {
             LeftInstance = leftInstance;
-            RightInstance = rightInstance;
-            IsRight = isRight;
+            RightInstance = default;
+            IsRight = false;
         }
 
-        public static Either<TLeft, TRight> Left(TLeft instance) =>
-            new Either<TLeft, TRight>(instance, default, false);
+        private Either(TRight rightInstance)
+        {
+            LeftInstance = default;
+            RightInstance = rightInstance;
+            IsRight = true;
+        }
 
-        public static Either<TLeft, TRight> Right(TRight instance) =>
-            new Either<TLeft, TRight>(default, instance, true);
+        public static Either<TLeft, TRight> Left(TLeft instance) => new Either<TLeft, TRight>(instance);
+
+        public static Either<TLeft, TRight> Right(TRight instance) => new Either<TLeft, TRight>(instance);
 
         public Either<TLeft, TResult> Bind<TResult>([NotNull] Func<TRight, Either<TLeft, TResult>> mapping)
         {

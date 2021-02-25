@@ -6,6 +6,7 @@ Useful bits for building C# projects.
 
 - Functional Programming
   - Maybe monad
+  - Either monad
 
 ## Contributors
 

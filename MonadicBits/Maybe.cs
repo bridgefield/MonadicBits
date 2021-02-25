@@ -8,15 +8,15 @@ namespace MonadicBits
         private T Instance { get; }
         private bool IsJust { get; }
 
-        private Maybe(T instance, bool isJust)
+        private Maybe(T instance)
         {
             Instance = instance;
-            IsJust = isJust;
+            IsJust = true;
         }
 
-        public static Maybe<T> Just(T instance) => new Maybe<T>(instance, true);
+        public static Maybe<T> Just(T instance) => new Maybe<T>(instance);
 
-        public static Maybe<T> Nothing() => new Maybe<T>(default, false);
+        public static Maybe<T> Nothing() => new Maybe<T>();
 
         public Maybe<TResult> Bind<TResult>([NotNull] Func<T, Maybe<TResult>> mapping)
         {
