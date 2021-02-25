@@ -16,4 +16,4 @@ jobs:
     - name: Pack
       run: dotnet pack --configuration Release
     - name: Push
-      run: dotnet nuget push **\*.nupkg -k ${{ secrets.NUGET_ORG_API_KEY }} --skip-duplicate
+      run: dotnet nuget push **\*.nupkg -s nuget.org -k ${{ secrets.NUGET_ORG_API_KEY }} --skip-duplicate
