@@ -10,27 +10,12 @@ namespace MonadicBitsTests
         public static void Just_creates_maybe_with_value()
         {
             const string input = "Test";
-            var longResult = Maybe<string>.Just(input);
-            longResult.Match(s => Assert.AreEqual(input, s), Assert.Fail);
-            var shortResult = input.Just();
-            shortResult.Match(s => Assert.AreEqual(input, s), Assert.Fail);
+            Maybe<string>.Just(input).Match(s => Assert.AreEqual(input, s), Assert.Fail);
         }
 
         [Test]
         public static void Nothing_creates_empty_maybe() =>
             Maybe<string>.Nothing().Match(Assert.Fail, Assert.Pass);
-
-        [Test]
-        public static void JustNotNull_creates_empty_maybe_from_null() =>
-            ((string) null).JustNotNull().Match(Assert.Fail, Assert.Pass);
-
-        [Test]
-        public static void JustNotNull_creates_maybe_with_value_from_not_null()
-        {
-            const string value = "Test";
-            var result = value.JustNotNull();
-            result.Match(s => Assert.AreEqual(value, s), Assert.Fail);
-        }
 
         [Test]
         public static void Match_with_null_just_action_throws_exception() =>
@@ -52,16 +37,14 @@ namespace MonadicBitsTests
         public static void Match_maybe_with_value_returns_value()
         {
             const string value = "Test";
-            var result = value.Just().Match(v => v, () => "Nothing");
-            Assert.AreEqual(value, result);
+            Assert.AreEqual(value, value.Just().Match(v => v, () => "Nothing"));
         }
 
         [Test]
         public static void Match_empty_maybe_returns_nothing_value()
         {
             const string value = "Test";
-            var result = Maybe<string>.Nothing().Match(_ => "Just", () => value);
-            Assert.AreEqual(value, result);
+            Assert.AreEqual(value, Maybe<string>.Nothing().Match(_ => "Just", () => value));
         }
 
         [Test]
@@ -116,38 +99,6 @@ namespace MonadicBitsTests
             const string leftInput = "Left";
             var result = Maybe<string>.Nothing().ToEither(leftInput);
             result.Match(left => Assert.AreEqual(leftInput, left), Assert.Fail);
-        }
-
-        [Test]
-        public static void Select_with_null_selector_throws_exception() =>
-            Assert.Throws<ArgumentNullException>(() => "Test".Just().Select((Func<string, string>) null));
-
-        [Test]
-        public static void Select_from_maybe_with_value_returns_maybe_with_value()
-        {
-            const string input = "Test";
-            (from s in input.Just() select s).Match(s => Assert.AreEqual(input, s), Assert.Fail);
-        }
-
-        [Test]
-        public static void SelectMany_with_null_collection_throws_exception() =>
-            Assert.Throws<ArgumentNullException>(() => "Test".Just().SelectMany((Func<string, Maybe<string>>) null,
-                (i, c) => $"{i}{c}"));
-
-        [Test]
-        public static void SelectMany_with_null_selector_throws_exception() =>
-            Assert.Throws<ArgumentNullException>(() =>
-                "Test".Just().SelectMany(s => s.Just(), (Func<string, string, string>) null));
-
-        [Test]
-        public static void SelectMany_from_maybe_with_value_returns_maybe_with_value()
-        {
-            const int input = 42;
-            (
-                from s in "Test".Just()
-                from i in input.Just()
-                select i
-            ).Match(i => Assert.AreEqual(input, i), Assert.Fail);
         }
     }
 }
