@@ -4,12 +4,8 @@ namespace MonadicBits
 {
     public static class MaybeLinqExtensions
     {
-        public static Maybe<TResult> Select<T, TResult>(this Maybe<T> maybe, Func<T, TResult> selector)
-        {
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
-
-            return maybe.Map(selector);
-        }
+        public static Maybe<TResult> Select<T, TResult>(this Maybe<T> maybe, Func<T, TResult> selector) =>
+            maybe.Map(selector);
 
         public static Maybe<TResult> SelectMany<T, TCollection, TResult>(
             this Maybe<T> maybe,
