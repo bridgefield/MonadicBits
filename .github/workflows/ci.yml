@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -24,7 +22,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Pack
-      run: dotnet pack --configuration Release  --version-suffix ci-${{ github.run_number }}
+      run: dotnet pack --configuration Release -p:PackageVersion=${{ github.run_number }}-ci
     - name: Add Nuget source
       run: dotnet nuget add source https://nuget.pkg.github.com/bridgefield/index.json -n github -u bridgefield -p ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text
     - name: Push
