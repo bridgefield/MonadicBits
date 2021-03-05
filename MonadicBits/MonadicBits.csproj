@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <PackageId>bridgefield.MonadicBits</PackageId>
-        <VersionPrefix>0.1.0-alpha</VersionPrefix>
         <Authors>Andreas Pfohl</Authors>
         <Company>bridgefield GmbH</Company>
         <RepositoryUrl>https://github.com/bridgefield/bits</RepositoryUrl>
