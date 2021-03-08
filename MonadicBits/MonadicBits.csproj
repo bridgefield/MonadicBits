@@ -3,9 +3,9 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <PackageId>bridgefield.MonadicBits</PackageId>
-        <Authors>Andreas Pfohl</Authors>
+        <Authors>Andreas Pfohl,Dirk Peters</Authors>
         <Company>bridgefield GmbH</Company>
-        <RepositoryUrl>https://github.com/bridgefield/bits</RepositoryUrl>
+        <RepositoryUrl>https://github.com/bridgefield/MonadicBits</RepositoryUrl>
         <Owner>bridgefield</Owner>
     </PropertyGroup>
 
