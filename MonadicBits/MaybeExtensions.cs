@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MonadicBits
@@ -12,5 +13,12 @@ namespace MonadicBits
 
         public static Maybe<T> FirstOrNothing<T>(this IEnumerable<T> source) =>
             source.Select(value => value.Just()).DefaultIfEmpty(Maybe<T>.Nothing()).First();
+
+        public static Maybe<T> JustWhen<T>(this T value, Func<T, bool> predicate)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            
+            return predicate(value) ? Maybe<T>.Just(value) : Maybe<T>.Nothing();
+        }
     }
 }

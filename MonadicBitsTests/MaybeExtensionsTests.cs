@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MonadicBits;
 using NUnit.Framework;
 
@@ -34,5 +35,23 @@ namespace MonadicBitsTests
         [Test]
         public static void FirstOrNothing_with_empty_list_returns_nothing() =>
             new List<int>().FirstOrNothing().Match(_ => Assert.Fail(), Assert.Pass);
+
+        [Test]
+        public static void JustWhen_with_null_predicate_throws_exception() =>
+            Assert.Throws<ArgumentNullException>(() => "Test".JustWhen(null));
+        
+        [Test]
+        public static void JustWhen_with_false_predicate_returns_nothing()
+        {
+            const string input = "Test";
+            input.JustWhen(s => s.Length == input.Length + 1).Match(_ => Assert.Fail(), Assert.Pass);
+        }
+        
+        [Test]
+        public static void JustWhen_with_true_predicate_returns_just()
+        {
+            const string input = "Test";
+            input.JustWhen(s => s.Length == input.Length).Match(_ => Assert.Pass(), Assert.Fail);
+        }
     }
 }
