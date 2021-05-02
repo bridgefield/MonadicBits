@@ -37,6 +37,10 @@ namespace MonadicBitsTests
             new List<int>().FirstOrNothing().Match(_ => Assert.Fail(), Assert.Pass);
 
         [Test]
+        public static void Just_throws_on_null() =>
+            Assert.Throws<ArgumentNullException>(() => ((object) null).Just());
+
+        [Test]
         public static void JustWhen_with_null_predicate_throws_exception() =>
             Assert.Throws<ArgumentNullException>(() => "Test".JustWhen(null));
         

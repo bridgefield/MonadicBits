@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MonadicBits;
 using NUnit.Framework;
+using static MonadicBitsTests.TestMonads;
 
 namespace MonadicBitsTests
 {
@@ -17,7 +18,7 @@ namespace MonadicBitsTests
 
         [Test]
         public static async Task MapAsync_empty_maybe_to_async_mapping_returns_empty_maybe_task() =>
-            (await Maybe<string>.Nothing().MapAsync(_ => Task.FromResult(42)))
+            (await Nothing<string>().MapAsync(_ => Task.FromResult(42)))
             .Match(_ => Assert.Fail(), Assert.Pass);
 
         [Test]
@@ -51,7 +52,7 @@ namespace MonadicBitsTests
 
         [Test]
         public static async Task BindAsync_empty_maybe_to_async_mapping_empty_maybe_task() =>
-            (await Maybe<string>.Nothing().BindAsync(_ => Task.FromResult(42.Just())))
+            (await Nothing<string>().BindAsync(_ => Task.FromResult(42.Just())))
             .Match(_ => Assert.Fail(), Assert.Pass);
 
         [Test]

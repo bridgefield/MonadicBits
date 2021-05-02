@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using static MonadicBits.Functional;
 
 namespace MonadicBits
 {
@@ -74,6 +75,6 @@ namespace MonadicBits
             return Match(left => Either<TResult, TRight>.Left(mapping(left)), Either<TResult, TRight>.Right);
         }
 
-        public Maybe<TRight> ToMaybe() => Match(_ => Maybe<TRight>.Nothing(), Maybe<TRight>.Just);
+        public Maybe<TRight> ToMaybe() => Match(_ => Nothing, right => right.Just());
     }
 }
