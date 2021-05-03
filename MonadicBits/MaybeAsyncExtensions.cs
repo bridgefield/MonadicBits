@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using static MonadicBits.Functional;
 
 namespace MonadicBits
 {
@@ -9,7 +10,7 @@ namespace MonadicBits
             Func<T, Task<TResult>> mapping, bool continueOnCapturedContext = false) =>
             maybe.Map(mapping).Match(
                 async task => (await task.ConfigureAwait(continueOnCapturedContext)).Just(),
-                () => Task.FromResult(Maybe<TResult>.Nothing()));
+                () => Task.FromResult<Maybe<TResult>>(Nothing));
 
         public static async Task<Maybe<TResult>> MapAsync<T, TResult>(this Task<Maybe<T>> maybeTask,
             Func<T, TResult> mapping, bool continueOnCapturedContext = false) =>
@@ -27,7 +28,7 @@ namespace MonadicBits
 
             return maybe.Match(
                 async value => await mapping(value).ConfigureAwait(continueOnCapturedContext),
-                () => Task.FromResult(Maybe<TResult>.Nothing()));
+                () => Task.FromResult<Maybe<TResult>>(Nothing));
         }
 
         public static async Task<Maybe<TResult>> BindAsync<T, TResult>(this Task<Maybe<T>> maybeTask,

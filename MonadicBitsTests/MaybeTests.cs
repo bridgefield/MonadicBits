@@ -1,6 +1,7 @@
 using System;
 using MonadicBits;
 using NUnit.Framework;
+using static MonadicBitsTests.TestMonads;
 
 namespace MonadicBitsTests
 {
@@ -10,12 +11,12 @@ namespace MonadicBitsTests
         public static void Just_creates_maybe_with_value()
         {
             const string input = "Test";
-            Maybe<string>.Just(input).Match(s => Assert.AreEqual(input, s), Assert.Fail);
+            input.Just().Match(s => Assert.AreEqual(input, s), Assert.Fail);
         }
 
         [Test]
         public static void Nothing_creates_empty_maybe() =>
-            Maybe<string>.Nothing().Match(Assert.Fail, Assert.Pass);
+            Nothing<string>().Match(Assert.Fail, Assert.Pass);
 
         [Test]
         public static void Match_with_null_just_action_throws_exception() =>
@@ -44,16 +45,16 @@ namespace MonadicBitsTests
         public static void Match_empty_maybe_returns_nothing_value()
         {
             const string value = "Test";
-            Assert.AreEqual(value, Maybe<string>.Nothing().Match(_ => "Just", () => value));
+            Assert.AreEqual(value, Nothing<string>().Match(_ => "Just", () => value));
         }
 
         [Test]
         public static void Match_maybe_with_value_calls_just_action() =>
-            "Test".Just().Match(Assert.Pass, Assert.Fail);
+            WithValue().Match(_ => Assert.Pass(), Assert.Fail);
 
         [Test]
         public static void Match_empty_maybe_calls_nothing_action() =>
-            Maybe<string>.Nothing().Match(Assert.Fail, Assert.Pass);
+            Nothing<string>().Match(Assert.Fail, Assert.Pass);
 
         [Test]
         public static void Map_with_null_mapping_throws_exception() =>
@@ -68,7 +69,7 @@ namespace MonadicBitsTests
 
         [Test]
         public static void Map_empty_maybe_returns_empty_maybe() =>
-            Maybe<string>.Nothing().Map(_ => 42).Match(_ => Assert.Fail(), Assert.Pass);
+            Nothing<string>().Map(_ => 42).Match(_ => Assert.Fail(), Assert.Pass);
 
         [Test]
         public static void Bind_to_null_method_throws_exception() =>
@@ -83,7 +84,7 @@ namespace MonadicBitsTests
 
         [Test]
         public static void Bind_empty_maybe_to_method_returns_empty_maybe() =>
-            Maybe<string>.Nothing().Bind(_ => 42.Just()).Match(_ => Assert.Fail(), Assert.Pass);
+            Nothing<string>().Bind(_ => 42.Just()).Match(_ => Assert.Fail(), Assert.Pass);
 
         [Test]
         public static void Just_to_either_makes_right()
@@ -97,7 +98,7 @@ namespace MonadicBitsTests
         public static void Nothing_to_either_makes_left()
         {
             const string leftInput = "Left";
-            var result = Maybe<string>.Nothing().ToEither(leftInput);
+            var result = Nothing<string>().ToEither(leftInput);
             result.Match(left => Assert.AreEqual(leftInput, left), Assert.Fail);
         }
     }

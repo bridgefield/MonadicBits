@@ -1,8 +1,16 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using MonadicBits.Maybe;
 
 namespace MonadicBits
 {
+    using static Functional;
+
+    public static partial class Functional
+    {
+        public static Nothing Nothing = default;
+    }
+
     public readonly struct Maybe<T>
     {
         private T Instance { get; }
@@ -14,22 +22,14 @@ namespace MonadicBits
             IsJust = true;
         }
 
-        public static Maybe<T> Just(T instance) => new Maybe<T>(instance);
-
-        public static Maybe<T> Nothing() => new Maybe<T>();
-
-        public Maybe<TResult> Bind<TResult>([NotNull] Func<T, Maybe<TResult>> mapping)
-        {
-            if (mapping == null) throw new ArgumentNullException(nameof(mapping));
-
-            return IsJust ? mapping(Instance) : Maybe<TResult>.Nothing();
-        }
+        public Maybe<TResult> Bind<TResult>([NotNull] Func<T, Maybe<TResult>> mapping) => 
+            Match(mapping, () => Nothing);
 
         public Maybe<TResult> Map<TResult>([NotNull] Func<T, TResult> mapping)
         {
             if (mapping == null) throw new ArgumentNullException(nameof(mapping));
 
-            return Match(value => Maybe<TResult>.Just(mapping(value)), Maybe<TResult>.Nothing);
+            return Match(value => mapping(value).Just(), () => Nothing);
         }
 
         public TResult Match<TResult>([NotNull] Func<T, TResult> just, [NotNull] Func<TResult> nothing)
@@ -53,5 +53,17 @@ namespace MonadicBits
 
         public Either<TLeft, T> ToEither<TLeft>([NotNull] TLeft left) =>
             IsJust ? Either<TLeft, T>.Right(Instance) : Either<TLeft, T>.Left(left);
+
+        public static implicit operator Maybe<T>(Nothing _) => new Maybe<T>();
+
+        public static implicit operator Maybe<T>(T value) =>
+            value == null ? Nothing : new Maybe<T>(value);
+    }
+
+    namespace Maybe
+    {
+        public readonly struct Nothing
+        {
+        }
     }
 }
