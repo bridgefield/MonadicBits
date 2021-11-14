@@ -6,6 +6,12 @@ namespace MonadicBitsTests
     {
         public static Maybe<T> Nothing<T>() => Functional.Nothing;
 
-        public static Maybe<int> WithValue() => 42;
+        public static Maybe<int> JustAnInt() => 42;
+
+        public static Either<string, string> Left(string value) =>
+            value.Left();
+
+        public static Either<string, string> Right(string value) =>
+            value.Right();
     }
 }
