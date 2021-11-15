@@ -50,7 +50,7 @@ namespace MonadicBitsTests
 
         [Test]
         public static void Match_maybe_with_value_calls_just_action() =>
-            WithValue().Match(_ => Assert.Pass(), Assert.Fail);
+            JustAnInt().Match(_ => Assert.Pass(), Assert.Fail);
 
         [Test]
         public static void Match_empty_maybe_calls_nothing_action() =>

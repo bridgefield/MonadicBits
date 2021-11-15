@@ -22,7 +22,7 @@ namespace MonadicBits
             IsJust = true;
         }
 
-        public Maybe<TResult> Bind<TResult>([NotNull] Func<T, Maybe<TResult>> mapping) => 
+        public Maybe<TResult> Bind<TResult>([NotNull] Func<T, Maybe<TResult>> mapping) =>
             Match(mapping, () => Nothing);
 
         public Maybe<TResult> Map<TResult>([NotNull] Func<T, TResult> mapping)
@@ -52,7 +52,7 @@ namespace MonadicBits
         }
 
         public Either<TLeft, T> ToEither<TLeft>([NotNull] TLeft left) =>
-            IsJust ? Either<TLeft, T>.Right(Instance) : Either<TLeft, T>.Left(left);
+            Match<Either<TLeft, T>>(i => i.Right(), () => left.Left());
 
         public static implicit operator Maybe<T>(Nothing _) => new Maybe<T>();
 
