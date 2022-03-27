@@ -4,6 +4,8 @@
 
 Useful monads for building C# projects.
 
+See [Monads](./documentation/monads.md) to explain the purpose of monads in general, and the implementations in this repository.
+
 ## Contents
 
 - Maybe monad

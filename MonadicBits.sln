@@ -4,6 +4,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonadicBits", "MonadicBits\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonadicBitsTests", "MonadicBitsTests\MonadicBitsTests.csproj", "{A694D140-6B0B-4500-837F-B1FCA8FE3837}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{0D48A25E-65BA-4936-8AEA-83FED2524E01}"
+	ProjectSection(SolutionItems) = preProject
+		documentation\monads.md = documentation\monads.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
