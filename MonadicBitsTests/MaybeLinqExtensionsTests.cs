@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using MonadicBits;
 using NUnit.Framework;
 
@@ -10,7 +11,7 @@ namespace MonadicBitsTests
         public static void Select_from_maybe_with_value_returns_maybe_with_value()
         {
             const string input = "Test";
-            (from s in input.Just() select s).Match(s => Assert.AreEqual(input, s), Assert.Fail);
+            (from s in input.Just() select s).Should().Be(input.Just());
         }
 
         [Test]
@@ -31,7 +32,7 @@ namespace MonadicBitsTests
                 from s in "Test".Just()
                 from i in input.Just()
                 select i
-            ).Match(i => Assert.AreEqual(input, i), Assert.Fail);
+            ).Should().Be(input.Just());
         }
     }
 }

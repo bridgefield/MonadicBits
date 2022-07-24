@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using MonadicBits;
 using NUnit.Framework;
 
@@ -12,7 +13,7 @@ namespace MonadicBitsTests
         {
             const string input = "Test";
             (await (from s in Task.FromResult(input.Just()) select s))
-                .Match(s => Assert.AreEqual(input, s), Assert.Fail);
+                .Should().Be(input.Just());
         }
 
         [Test]
@@ -35,7 +36,7 @@ namespace MonadicBitsTests
                 from s in Task.FromResult("Test".Just())
                 from i in Task.FromResult(input.Just())
                 select i
-            )).Match(i => Assert.AreEqual(input, i), Assert.Fail);
+            )).Should().Be(input.Just());
         }
     }
 }

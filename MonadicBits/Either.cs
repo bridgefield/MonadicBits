@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using MonadicBits.Either;
 
 namespace MonadicBits
@@ -86,6 +87,25 @@ namespace MonadicBits
 
         public static implicit operator Either<TLeft, TRight>(Right<TRight> right) =>
             new Either<TLeft, TRight>(right.Value);
+
+        public override string ToString() =>
+            IsRight ? $"Right: {{{RightInstance}}}" : $"Left: {{{LeftInstance}}}";
+
+        public bool Equals(Either<TLeft, TRight> other) =>
+            IsRight == other.IsRight &&
+            (IsRight ? Equals(other.RightInstance, RightInstance) : Equals(other.LeftInstance, LeftInstance));
+
+        public override bool Equals(object obj) =>
+            obj switch
+            {
+                Either<TLeft, TRight> other => Equals(other),
+                Right<TRight> right when IsRight => Equals(right.Value, RightInstance),
+                Left<TLeft> left when !IsRight => Equals(left.Value, LeftInstance),
+                _ => false
+            };
+
+        public override int GetHashCode() =>
+            IsRight ? RightInstance.Right().GetHashCode() : LeftInstance.Left().GetHashCode();
     }
 
     namespace Either
@@ -97,6 +117,10 @@ namespace MonadicBits
             public Left(T value) => Value = value;
 
             public static implicit operator Left<T>(T value) => new Left<T>(value);
+
+            public Either<TResult, TRight>
+                BindLeft<TResult, TRight>([NotNull] Func<T, Either<TResult, TRight>> mapping) =>
+                Value.Left<T, TRight>().BindLeft(mapping);
         }
 
         public readonly struct Right<T>
@@ -106,6 +130,9 @@ namespace MonadicBits
             public Right(T value) => Value = value;
 
             public static implicit operator Right<T>(T value) => new Right<T>(value);
+
+            public Either<TLeft, TResult> Bind<TLeft, TResult>([NotNull] Func<T, Either<TLeft, TResult>> mapping) =>
+                Value.Right<TLeft, T>().Bind(mapping);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Intrinsics.Arm;
 using FluentAssertions;
+using Microsoft.VisualBasic.CompilerServices;
 using MonadicBits;
 using NUnit.Framework;
 
@@ -14,27 +16,29 @@ namespace MonadicBitsTests
         public static void Just_creates_maybe_with_value()
         {
             const string input = "Test";
-            input.Just().Match(s => Assert.AreEqual(input, s), Assert.Fail);
+            input.Just().Match(
+                j => Assert.That(j, Is.EqualTo(input)),
+                Assert.Fail);
         }
 
         [Test]
         public static void JustNotNull_creates_empty_maybe_from_null() =>
-            ((string)null).JustNotNull().Match(Assert.Fail, Assert.Pass);
+            ((string)null).JustNotNull().Should().Be(Nothing);
 
         [Test]
         public static void JustNotNull_creates_maybe_with_value_from_not_null()
         {
             const string value = "Test";
-            value.JustNotNull().Match(s => Assert.AreEqual(value, s), Assert.Fail);
+            value.JustNotNull().Should().Be(value.Just());
         }
 
         [Test]
         public static void ToMaybe_creates_nothing_from_empty_nullable() =>
-            ((int?)null).ToMaybe().Match(_ => Assert.Fail(), Assert.Pass);
+            ((int?)null).ToMaybe().Should().Be(Nothing);
 
         [Test]
         public static void ToMaybe_creates_just_from_nullable_value() =>
-            ((int?)1).ToMaybe().Match(_ => Assert.Pass(), Assert.Fail);
+            ((int?)1).ToMaybe().Should().Be(1.Just());
 
         [Test]
         public static void Just_to_nullable_returns_value() =>
@@ -49,21 +53,21 @@ namespace MonadicBitsTests
         {
             const string initialValue = "value";
             initialValue.Just().Or(() => "alternative".Just())
-                .Match(j => j.Should().Be(initialValue), Assert.Fail);
+                .Should().Be(initialValue.Just());
         }
 
         [Test]
-        public static void Or_on_nothing_returns_initial_value()
+        public static void Or_on_nothing_returns_alternative_value()
         {
             const string alternativeValue = "alternative";
             TestMonads.Nothing<string>().Or(() => alternativeValue.Just())
-                .Match(j => j.Should().Be(alternativeValue), Assert.Fail);
+                .Should().Be(alternativeValue.Just());
         }
 
         [Test]
         public static void Or_on_nothing_and_nothing_alternative_returns_nothing() =>
             TestMonads.Nothing<string>().Or(() => Nothing)
-                .Match(Assert.Fail, Assert.Pass);
+                .Should().Be(Nothing);
 
         [Test]
         public static void Enumerable_created_from_just_contains_value()
@@ -80,7 +84,7 @@ namespace MonadicBitsTests
         public static void FirstOrNothing_with_list_of_values_returns_maybe_of_first_value()
         {
             List<int> values = new() { 23, 42, 15 };
-            values.FirstOrNothing().Match(i => Assert.AreEqual(values[0], i), Assert.Fail);
+            values.FirstOrNothing().Should().Be(values[0].Just());
         }
 
         [Test]
@@ -89,17 +93,17 @@ namespace MonadicBitsTests
             const int matchingValue = 25;
             var allValues = new[] { 1, 2, matchingValue, 34 };
             allValues.FirstOrNothing(v => v == matchingValue)
-                .Match(i => i.Should().Be(matchingValue), Assert.Fail);
+                .Should().Be(matchingValue.Just());
         }
 
         [Test]
         public static void FirstOrNothing_with_predicate_returns_nothing_when_no_item_matches() =>
             new[] { 1, 2, 34 }.FirstOrNothing(v => v == 25)
-                .Match(_ => Assert.Fail(), Assert.Pass);
+                .Should().Be(Nothing);
 
         [Test]
         public static void FirstOrNothing_with_empty_list_returns_nothing() =>
-            new List<int>().FirstOrNothing().Match(_ => Assert.Fail(), Assert.Pass);
+            new List<int>().FirstOrNothing().Should().Be(Nothing);
 
         [Test]
         public static void Just_throws_on_null() =>
@@ -113,14 +117,16 @@ namespace MonadicBitsTests
         public static void JustWhen_with_false_predicate_returns_nothing()
         {
             const string input = "Test";
-            input.JustWhen(s => s.Length == input.Length + 1).Match(_ => Assert.Fail(), Assert.Pass);
+            input.JustWhen(s => s.Length == input.Length + 1)
+                .Should().Be(Nothing);
         }
 
         [Test]
         public static void JustWhen_with_true_predicate_returns_just()
         {
             const string input = "Test";
-            input.JustWhen(s => s.Length == input.Length).Match(_ => Assert.Pass(), Assert.Fail);
+            input.JustWhen(s => s.Length == input.Length)
+                .Should().Be(input.Just());
         }
     }
 }
