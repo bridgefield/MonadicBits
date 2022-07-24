@@ -4,7 +4,7 @@ namespace MonadicBitsTests
 {
     public static class TestMonads
     {
-        public static Maybe<T> Nothing<T>() => Functional.Nothing;
+        public static Maybe<T> Nothing<T>() => default;
 
         public static Maybe<int> JustAnInt() => 42;
 

@@ -7,6 +7,6 @@ namespace MonadicBitsTests
     {
         [Test]
         public static void Elevation_creates_single_item_enumeration() =>
-            MonadicBits.Enumerable.Return(42).Should().BeEquivalentTo(new[] { 42 });
+            MonadicBits.MonadicEnumerable.Return(42).Should().BeEquivalentTo(new[] { 42 });
     }
 }

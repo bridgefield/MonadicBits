@@ -58,12 +58,32 @@ namespace MonadicBits
 
         public static implicit operator Maybe<T>(T value) =>
             value == null ? Nothing : new Maybe<T>(value);
+
+        public override string ToString() => IsJust ? $"Just: {{{Instance}}}" : nameof(Nothing);
+
+        public override int GetHashCode() => IsJust ? Instance.GetHashCode() : 0;
+
+        public override bool Equals(object obj) =>
+            obj switch
+            {
+                Nothing _ => !IsJust,
+                Maybe<T> other => Equals(other),
+                T otherValue when IsJust => Equals(Instance, otherValue),
+                _ => false
+            };
+
+        public bool Equals(Maybe<T> other) =>
+            other.IsJust == IsJust && Equals(other.Instance, Instance);
     }
 
     namespace Maybe
     {
         public readonly struct Nothing
         {
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj) =>
+                obj is Nothing || obj != null && obj.Equals(this);
         }
     }
 }
