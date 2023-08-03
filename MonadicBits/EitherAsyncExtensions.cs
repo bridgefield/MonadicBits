@@ -9,7 +9,7 @@ namespace MonadicBits
             this Either<TLeft, TRight> either, Func<TRight, Task<TResult>> mapping,
             bool continueOnCapturedContext = false) =>
             either.Map(mapping).Match(
-                left => Task.FromResult<Either<TLeft,TResult>>(left.Left()),
+                left => Task.FromResult<Either<TLeft, TResult>>(left.Left()),
                 async task => (await task.ConfigureAwait(continueOnCapturedContext)).Right<TLeft, TResult>());
 
         public static Task<Either<TResult, TRight>> MapLeftAsync<TLeft, TRight, TResult>(
@@ -84,5 +84,12 @@ namespace MonadicBits
             bool continueOnCapturedContext = false) =>
             await (await eitherTask.ConfigureAwait(continueOnCapturedContext)).BindLeftAsync(mapping,
                 continueOnCapturedContext);
+
+        public static Task<Maybe<TRight>> ToMaybeAsync<TLeft, TRight>(this Either<TLeft, TRight> either) =>
+            Task.FromResult(either.ToMaybe());
+
+        public static async Task<Maybe<TRight>>
+            ToMaybeAsync<TLeft, TRight>(this Task<Either<TLeft, TRight>> eitherTask) =>
+            (await eitherTask).ToMaybe();
     }
 }

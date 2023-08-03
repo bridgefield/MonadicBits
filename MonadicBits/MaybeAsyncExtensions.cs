@@ -39,5 +39,11 @@ namespace MonadicBits
             Func<T, Task<Maybe<TResult>>> mapping, bool continueOnCapturedContext = false) =>
             await (await maybeTask.ConfigureAwait(continueOnCapturedContext)).BindAsync(mapping,
                 continueOnCapturedContext);
+
+        public static Task<Either<TLeft, T>> ToEitherAsync<T, TLeft>(this Maybe<T> maybe, TLeft left) =>
+            Task.FromResult(maybe.ToEither(left));
+
+        public static async Task<Either<TLeft, T>> ToEitherAsync<T, TLeft>(this Task<Maybe<T>> maybeTask, TLeft left) =>
+            (await maybeTask).ToEither(left);
     }
 }
