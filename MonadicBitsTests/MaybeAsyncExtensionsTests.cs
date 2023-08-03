@@ -71,5 +71,37 @@ namespace MonadicBitsTests
             (await Task.FromResult("Test".Just()).BindAsync(_ => Task.FromResult(input.Just())))
                 .Should().Be(input.Just());
         }
+
+        [Test]
+        public static async Task Just_to_async_either_makes_right_task()
+        {
+            const string input = "Test";
+            var result = input.Just().ToEitherAsync("Left");
+            (await result).Match(Assert.Fail, right => Assert.AreEqual(input, right));
+        }
+
+        [Test]
+        public static async Task Nothing_to_async_either_makes_left_task()
+        {
+            const string leftInput = "Left";
+            var result = Nothing<string>().ToEitherAsync(leftInput);
+            (await result).Match(left => Assert.AreEqual(leftInput, left), Assert.Fail);
+        }
+
+        [Test]
+        public static async Task Just_task_to_async_either_makes_right_task()
+        {
+            const string input = "Test";
+            var result = Task.FromResult(input.Just()).ToEitherAsync("Left");
+            (await result).Match(Assert.Fail, right => Assert.AreEqual(input, right));
+        }
+
+        [Test]
+        public static async Task Nothing_task_to_async_either_makes_left_task()
+        {
+            const string leftInput = "Left";
+            var result = Task.FromResult(Nothing<string>()).ToEitherAsync(leftInput);
+            (await result).Match(left => Assert.AreEqual(leftInput, left), Assert.Fail);
+        }
     }
 }

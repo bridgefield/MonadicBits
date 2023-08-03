@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentAssertions;
 using MonadicBits;
 using NUnit.Framework;
 
 namespace MonadicBitsTests
 {
+    using static Functional;
+
     public static class EitherAsyncExtensionsTests
     {
         [Test]
@@ -76,12 +79,12 @@ namespace MonadicBitsTests
         [Test]
         public static void BindAsync_with_null_mapping_throws_exception() =>
             Assert.ThrowsAsync<ArgumentNullException>(() =>
-                "Test".Right<string, string>().BindAsync((Func<string, Task<Either<string, string>>>) null));
+                "Test".Right<string, string>().BindAsync((Func<string, Task<Either<string, string>>>)null));
 
         [Test]
         public static void BindLeftAsync_with_null_mapping_throws_exception() =>
             Assert.ThrowsAsync<ArgumentNullException>(() =>
-                "Test".Left<string, string>().BindLeftAsync((Func<string, Task<Either<string, string>>>) null));
+                "Test".Left<string, string>().BindLeftAsync((Func<string, Task<Either<string, string>>>)null));
 
         [Test]
         public static async Task
@@ -153,6 +156,28 @@ namespace MonadicBitsTests
             (await Task.FromResult("Test".Left<string, string>())
                     .BindLeftAsync(_ => Task.FromResult(input.Left<int, string>())))
                 .Match(i => Assert.AreEqual(input, i), _ => Assert.Fail());
+        }
+
+        [Test]
+        public static async Task Left_to_async_maybe_returns_nothing_task() =>
+            (await TestMonads.Left("Test").ToMaybeAsync()).Should().Be(Nothing);
+
+        [Test]
+        public static async Task Right_to_async_maybe_returns_just_task()
+        {
+            const string value = "Test";
+            (await TestMonads.Right(value).ToMaybeAsync()).Should().Be(value.Just());
+        }
+
+        [Test]
+        public static async Task Left_task_to_async_maybe_returns_nothing_task() =>
+            (await Task.FromResult(TestMonads.Left("Test")).ToMaybeAsync()).Should().Be(Nothing);
+
+        [Test]
+        public static async Task Right_task_to_async_maybe_returns_just_task()
+        {
+            const string value = "Test";
+            (await Task.FromResult(TestMonads.Right(value)).ToMaybeAsync()).Should().Be(value.Just());
         }
     }
 }
