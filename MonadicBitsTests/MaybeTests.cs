@@ -7,6 +7,8 @@ using static MonadicBitsTests.TestMonads;
 
 namespace MonadicBitsTests
 {
+    using static Functional;
+
     public static class MaybeTests
     {
         [Test]
@@ -122,9 +124,25 @@ namespace MonadicBitsTests
         public static void Hash_code_of_nothing_is_hash_code_of_explicit_nothing() =>
             Nothing<int>().GetHashCode().Should().Be(new Nothing().GetHashCode());
 
+
         [Test]
-        public static void Nothing_maybe_equals_explicit_nothing() =>
+        public static void Nothing_maybe_equals_explicit_nothing()
+        {
+            Maybe<string> ReadEnvVar(string name) => Environment
+                .GetEnvironmentVariable(name).JustNotNull(); // may be Nothing
+
+            Maybe<int> Parse(string s) => int.TryParse(s, out var x) ? x.Just() : default;
+
+            var result = "PORT".Just()
+                .Bind(ReadEnvVar) // Maybe<string>
+                .Bind(Parse); // Maybe<int>
+            result.Match(
+                onJust: port => Console.WriteLine($"Listening on port {port}"),
+                onNothing: () => Console.WriteLine("Could not determine port")
+            );
+            Maybe<int> nothing = new Nothing();
             Nothing<int>().Should().Be(Functional.Nothing);
+        }
 
         [Test]
         public static void Explicit_nothing_equals_nothing_maybe_of_arbitrary_type() =>

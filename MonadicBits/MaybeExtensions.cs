@@ -42,6 +42,6 @@ namespace MonadicBits
         }
 
         public static IEnumerable<T> ToEnumerable<T>(this Maybe<T> source) =>
-            source.Match(Enumerable.Return, System.Linq.Enumerable.Empty<T>);
+            source.Match(MonadicEnumerable.Return, Enumerable.Empty<T>);
     }
 }
